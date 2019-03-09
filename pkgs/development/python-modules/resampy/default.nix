@@ -5,6 +5,7 @@
 , pytestcov
 , numpy
 , scipy
+, numba
 , cython
 , six
 }:
@@ -19,7 +20,7 @@ buildPythonPackage rec {
   };
 
   checkInputs = [ pytest pytestcov ];
-  propagatedBuildInputs = [ numpy scipy cython six ];
+  propagatedBuildInputs = [ numpy scipy numba cython six ];
 
   # No tests included
   doCheck = false;
