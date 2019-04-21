@@ -21113,6 +21113,12 @@ in
 
   steamcmd = steamPackages.steamcmd;
 
+  steamos-compositor = callPackage ../games/steamos/compositor { };
+  
+  steamos-compositor-plus = callPackage ../games/steamos/compositor-plus { };
+  
+  steamos-modeswitch-inhibitor = callPackage ../games/steamos/modeswitch-inhibitor { };
+
   linux-steam-integration = callPackage ../games/linux-steam-integration {
     gtk = pkgs.gtk3;
   };
