@@ -1,35 +1,23 @@
-{ stdenv, fetchFromGitHub, fixDarwinDylibNames }:
+{ stdenv, fetchFromGitHub, cmake, fixDarwinDylibNames }:
 
 stdenv.mkDerivation rec {
   pname = "leveldb";
-  version = "1.20";
+  version = "1.22";
 
   src = fetchFromGitHub {
     owner = "google";
     repo = "leveldb";
-    rev = "v${version}";
-    sha256 = "01kxga1hv4wp94agx5vl3ybxfw5klqrdsrb6p6ywvnjmjxm8322y";
+    rev = "${version}";
+    sha256 = "0qrnhiyq7r4wa1a4wi82zgns35smj94mcjsc7kfs1k6ia9ys79z7";
   };
 
-  nativeBuildInputs = []
+  nativeBuildInputs = [ cmake ]
     ++ stdenv.lib.optional stdenv.isDarwin [ fixDarwinDylibNames ];
 
-  buildPhase = ''
-    make all
+  postInstall = ''
+    mkdir $out/bin
+    cp leveldbutil $out/bin
   '';
-
-  installPhase = "
-    mkdir -p $out/{bin,lib,include}
-
-    cp -r include $out
-    mkdir -p $out/include/leveldb/helpers
-    cp helpers/memenv/memenv.h $out/include/leveldb/helpers
-
-    cp out-shared/lib* $out/lib
-    cp out-static/lib* $out/lib
-
-    cp out-static/leveldbutil $out/bin
-  ";
 
   meta = with stdenv.lib; {
     homepage = https://github.com/google/leveldb;
