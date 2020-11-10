@@ -7481,6 +7481,8 @@ in
 
   otpw = callPackage ../os-specific/linux/otpw { };
 
+  otree = callPackage ../applications/science/misc/otree { };
+
   overcommit = callPackage ../development/tools/overcommit { };
 
   overmind = callPackage ../applications/misc/overmind { };
