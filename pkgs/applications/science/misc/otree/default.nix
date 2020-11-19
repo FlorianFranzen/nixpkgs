@@ -40,6 +40,8 @@ in buildPythonApplication rec {
     sha256 = "1228a678140cc46dca5b6bc54597e991cea1fd9b293bfe2a858708bcc40d1436";
   };
 
+  patches = [ ./channel_routes.patch ];
+
   postPatch = ''
     substituteInPlace requirements.txt --replace "==" ">="
   '';
@@ -50,6 +52,7 @@ in buildPythonApplication rec {
     automat
     cffi
     channels
+    channels-redis
     colorama
     daphne
     django

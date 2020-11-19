@@ -1,0 +1,41 @@
+Only in otree-3.2.7-org: channel_routes.patch
+diff -ur otree-3.2.7-org/otree/channels/routing.py otree-3.2.7/otree/channels/routing.py
+--- otree-3.2.7-org/otree/channels/routing.py	2020-11-17 22:26:55.392577917 +0100
++++ otree-3.2.7/otree/channels/routing.py	2020-11-17 22:36:46.910702456 +0100
+@@ -37,12 +37,14 @@
+     url(r'^no_op/$', consumers.NoOp),
+ ]
+ 
++channel_routes = {}
+ 
+ extensions_modules = get_extensions_modules('routing')
+ for extensions_module in extensions_modules:
+     websocket_routes += getattr(extensions_module, 'websocket_routes', [])
++    channel_routes.update(getattr(extensions_module, 'channel_routes', {}))
+ 
+-
+-application = ProtocolTypeRouter(
+-    {"websocket": AuthMiddlewareStack(URLRouter(websocket_routes))}
+-)
++application = ProtocolTypeRouter({
++    "websocket": AuthMiddlewareStack(URLRouter(websocket_routes)),
++    "channel": ChannelNameRouter(channel_routes),
++})
+Only in otree-3.2.7-org/otree/channels: routing.py.orig
+Only in otree-3.2.7-org/otree/channels: routing.py.rej
+diff -ur otree-3.2.7-org/otree/extensions.py otree-3.2.7/otree/extensions.py
+--- otree-3.2.7-org/otree/extensions.py	2020-11-17 22:26:55.394577887 +0100
++++ otree-3.2.7/otree/extensions.py	2020-11-17 22:36:37.418844882 +0100
+@@ -21,7 +21,10 @@
+ ----------
+ 
+ Should contain a variable ``websocket_routes``,
+-with a list of channel routes, as described in the Django channels documentation.
++with a list of websocket routes, as described in the Django channels documentation.
++
++Also can contain a variable ``channel_routes``,
++with a dictionary of channel workers, as described in the Django channels documentation.
+ 
+ admin.py
+ --------
+Only in otree-3.2.7-org/otree: extensions.py.rej
