@@ -8,6 +8,8 @@
     while the `mod.nix` pacakges provide a single out-of-tree mod.
 */
 { lib, stdenv
+, writeText
+, fetchurl
 , packageAttrs
 , patchEngine
 , wrapLaunchGame
@@ -16,34 +18,52 @@
 
 with lib;
 
-stdenv.mkDerivation (recursiveUpdate packageAttrs rec {
+let
+  deps = map (package: package.src)
+    (import ./deps.nix { inherit fetchurl; });
+
+  nuget-config = writeText "NuGet.Config" ''
+    <?xml version="1.0" encoding="utf-8"?>
+    <configuration>
+      <packageSources>
+        <clear />
+      </packageSources>
+    </configuration>
+  '';
+
+in stdenv.mkDerivation (recursiveUpdate packageAttrs rec {
   name = "${pname}-${version}";
   pname = "openra";
-  version = "${engine.name}-${engine.version}";
+  version = "0.0.0-${engine.version}";
 
   src = engine.src;
 
-  postPatch = patchEngine "." version;
+  #postPatch = patchEngine "." version;
 
   configurePhase = ''
     runHook preConfigure
 
-    make version VERSION=${escapeShellArg version}
+    make version VERSION=${engine.name}-${engine.version}
+
+    cp ${nuget-config} NuGet.Config && chmod 660 NuGet.Config
+    nuget sources Add -Name nixos -Source $(pwd)/nixos
+
+    for package in ${toString deps}; do
+      nuget add $package -Source nixos
+    done
 
     runHook postConfigure
   '';
 
-  buildFlags = [ "DEBUG=false" "default" "man-page" ];
+  HOME = "/tmp/fake-home";
 
-  checkTarget = "nunit test";
+  buildFlags = [ "RUNTIME=mono" ];
+
+  checkTarget = "test";
 
   installTargets = [
     "install"
-    "install-linux-icons"
-    "install-linux-desktop"
-    "install-linux-appdata"
-    "install-linux-mime"
-    "install-man-page"
+    "install-linux-shortcuts"
   ];
 
   postInstall = ''

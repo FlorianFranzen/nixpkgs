@@ -1,7 +1,7 @@
 /*  The reusable code, and package attributes, between OpenRA engine packages (engine.nix)
     and out-of-tree mod packages (mod.nix).
 */
-{ lib, makeSetupHook, curl, unzip, dos2unix, pkg-config, makeWrapper
+{ lib, makeSetupHook, msbuild, curl, unzip, dos2unix, pkg-config, makeWrapper
 , lua, mono, dotnetPackages, python
 , libGL, freetype, openal, SDL2
 , zenity
@@ -18,11 +18,7 @@ in {
   patchEngine = dir: version: ''
     sed -i \
       -e 's/^VERSION.*/VERSION = ${version}/g' \
-      -e '/fetch-geoip-db/d' \
-      -e '/GeoLite2-Country.mmdb.gz/d' \
       ${dir}/Makefile
-
-    sed -i 's|locations=.*|locations=${lua}/lib|' ${dir}/thirdparty/configure-native-deps.sh
   '';
 
   wrapLaunchGame = openraSuffix: ''
@@ -38,12 +34,15 @@ in {
   '';
 
   packageAttrs = {
+    RPATH = rpath;
+
     buildInputs = with dotnetPackages; [
       FuzzyLogicLibrary
       MaxMindDb
       MaxMindGeoIP2
       MonoNat
       NewtonsoftJson
+      Nuget
       NUnit3
       NUnitConsole
       OpenNAT
@@ -59,6 +58,7 @@ in {
 
     # TODO: Test if this is correct.
     nativeBuildInputs = [
+      msbuild
       curl
       unzip
       dos2unix
