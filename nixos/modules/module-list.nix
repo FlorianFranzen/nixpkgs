@@ -214,6 +214,7 @@
   ./security/dhparams.nix
   ./security/duosec.nix
   ./security/google_oslogin.nix
+  ./security/lkrg.nix
   ./security/lock-kernel-modules.nix
   ./security/misc.nix
   ./security/oath.nix
