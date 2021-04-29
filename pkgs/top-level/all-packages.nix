@@ -20367,6 +20367,20 @@ in
   # XanMod kernel
   linuxPackages_xanmod = recurseIntoAttrs (linuxPackagesFor pkgs.linux_xanmod);
 
+  # LKRG kernel
+  linuxPackages_lkrg = let
+    linux_kallsyms = linux_5_4.override {
+      structuredExtraConfig = with lib.kernel; {
+        KALLSYMS_ALL = yes;
+      };
+    };
+
+    linuxPackages_kallsyms = (linuxPackagesFor linux_kallsyms);
+
+  in recurseIntoAttrs (linuxPackages_kallsyms.extend (self: super: {
+    lkrg = super.callPackage ../os-specific/linux/lkrg { };
+  }));
+
   # A function to build a manually-configured kernel
   linuxManualConfig = makeOverridable (callPackage ../os-specific/linux/kernel/manual-config.nix {});
 

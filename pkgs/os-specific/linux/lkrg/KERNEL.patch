@@ -1,0 +1,17 @@
+diff --git a/Makefile b/Makefile
+index 4ef3dce..d5f999c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -11,10 +11,10 @@ P_KVER ?= $(shell uname -r)
+ P_BOOTUP_SCRIPT ?= scripts/bootup/lkrg-bootup.sh
+ TARGET := p_lkrg
+ ifneq ($(KERNELRELEASE),)
+-    KERNEL := /lib/modules/$(KERNELRELEASE)/build
++    KERNEL ?= /lib/modules/$(KERNELRELEASE)/build
+ else
+     ## KERNELRELEASE not set.
+-    KERNEL := /lib/modules/$(P_KVER)/build
++    KERNEL ?= /lib/modules/$(P_KVER)/build
+ endif
+ 
+ #
