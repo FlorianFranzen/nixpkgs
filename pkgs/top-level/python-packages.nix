@@ -2257,6 +2257,8 @@ self: super: with self; {
 
   ckcc-protocol = callPackage ../development/python-modules/ckcc-protocol { };
 
+  ckzg = callPackage ../development/python-modules/ckzg { };
+
   clarabel = callPackage ../development/python-modules/clarabel { };
 
   clarifai = callPackage ../development/python-modules/clarifai { };
