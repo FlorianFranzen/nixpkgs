@@ -12,8 +12,10 @@
 
 buildPythonPackage rec {
   pname = "eth-keyfile";
-  version = "0.8.0";
+  version = "0.8.1";
+
   pyproject = true;
+
   disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
@@ -21,7 +23,7 @@ buildPythonPackage rec {
     repo = "eth-keyfile";
     rev = "v${version}";
     fetchSubmodules = true;
-    hash = "sha256-797yhHuU9/lm96YKxl3SZ5IQAwDxDSYkLkiBdAHh0Uk=";
+    hash = "sha256-HufsN3aXdQErcQmnG2PZnEm5joqpy4f8IWNm3VrzJSY=";
   };
 
   build-system = [ setuptools ];
