@@ -18,15 +18,17 @@
 
 buildPythonPackage rec {
   pname = "eth-keys";
-  version = "0.5.0";
+  version = "0.5.1";
+
   pyproject = true;
+
   disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
     owner = "ethereum";
     repo = "eth-keys";
     rev = "v${version}";
-    hash = "sha256-vyyaLCG2uIHXX0t93DmFq8/u0rZL+nsBsH2gfgjziyo=";
+    hash = "sha256-KRIN3Yxu0N+XL7zpkNJHaIoSB6YODus7LIQEgX9U0bI=";
   };
 
   build-system = [ setuptools ];
